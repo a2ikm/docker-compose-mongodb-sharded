@@ -23,8 +23,6 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard0
-    volumes:
-      - 'shard0_data:/bitnami'
 
   mongodb-cfg:
     image: public.ecr.aws/bitnami/mongodb-sharded:4.4
@@ -35,11 +33,3 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=cfgreplicaset
-    volumes:
-      - 'cfg_data:/bitnami'
-
-volumes:
-  shard0_data:
-    driver: local
-  cfg_data:
-    driver: local
