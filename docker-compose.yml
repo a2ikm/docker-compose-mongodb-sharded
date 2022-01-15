@@ -12,6 +12,8 @@ services:
       - MONGODB_ROOT_PASSWORD=password123
     ports:
       - "27017:27017"
+    depends_on:
+      - mongodb-cfg
 
   mongodb-shard0:
     image: public.ecr.aws/bitnami/mongodb-sharded:4.4
@@ -23,6 +25,8 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard0
+    depends_on:
+      - mongodb-sharded
 
   mongodb-cfg:
     image: public.ecr.aws/bitnami/mongodb-sharded:4.4
