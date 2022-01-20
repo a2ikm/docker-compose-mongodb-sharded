@@ -11,4 +11,8 @@ class Doc
   key :name, String
 end
 
-Doc.new.save!
+Doc.new(name: "foo").save!
+Doc.new(name: "bar").save!
+
+binding.pry
+1

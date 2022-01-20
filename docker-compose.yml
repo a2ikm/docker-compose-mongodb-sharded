@@ -37,14 +37,17 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=cfgreplicaset
+  # ruby:
+  #   image: public.ecr.aws/docker/library/ruby:3.0
+  #   command: [ "bundle", "exec", "ruby", "mm.rb" ]
+  #   working_dir: /app
+  #   volumes:
+  #     - .:/app
+  #     - bundle:/usr/local/bundle
+  #   depends_on:
+  #     - mongodb-shard0
+  #   environment:
+  #     - "MONGODB_URL=mongodb://root:password123@mongodb-sharded:27017/test?authSource=admin"
 
-  ruby:
-    image: public.ecr.aws/docker/library/ruby:3.0
-    command: [ "bash" ]
-    working_dir: /app
-    volumes:
-      - .:/app
-    depends_on:
-      - mongodb-shard0
-    environment:
-      - "MONGODB_URL=mongodb://mongodb-sharded:27017/test"
+volumes:
+  bundle: null
