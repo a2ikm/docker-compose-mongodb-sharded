@@ -12,8 +12,6 @@ services:
       - MONGODB_ROOT_PASSWORD=password123
     ports:
       - "27017:27017"
-    depends_on:
-      - mongodb-cfg
 
   mongodb-shard0:
     image: public.ecr.aws/bitnami/mongodb-sharded:4.4
@@ -25,8 +23,6 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard0
-    depends_on:
-      - mongodb-sharded
 
   mongodb-cfg:
     image: public.ecr.aws/bitnami/mongodb-sharded:4.4
@@ -37,17 +33,21 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=cfgreplicaset
-  # ruby:
-  #   image: public.ecr.aws/docker/library/ruby:3.0
-  #   command: [ "bundle", "exec", "ruby", "mm.rb" ]
-  #   working_dir: /app
-  #   volumes:
-  #     - .:/app
-  #     - bundle:/usr/local/bundle
-  #   depends_on:
-  #     - mongodb-shard0
-  #   environment:
-  #     - "MONGODB_URL=mongodb://root:password123@mongodb-sharded:27017/test?authSource=admin"
+
+  ruby:
+    build: .
+    command: [ "bundle", "exec", "ruby", "mm.rb" ]
+    entrypoint: [ "./docker-entrypoint.sh" ]
+    working_dir: /app
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+    environment:
+      - "MONGODB_URL=mongodb://root:password123@mongodb-sharded:27017/test?authSource=admin"
+    depends_on:
+      - mongodb-sharded
+      - mongodb-shard0
+      - mongodb-cfg
 
 volumes:
   bundle: null
